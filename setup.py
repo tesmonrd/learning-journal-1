@@ -50,6 +50,6 @@ setup(name='testapp',
       [paste.app_factory]
       main = testapp:main
       [console_scripts]
-      initialize_testapp_db = testapp.scripts.initializedb:main
+      initialize_db = testapp.scripts.initializedb:main
       """,
       )

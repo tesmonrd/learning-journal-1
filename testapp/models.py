@@ -24,8 +24,8 @@ Base = declarative_base()
 class Entry(Base):
     __tablename__ = 'models'
     id = Column(Integer, primary_key=True)
-    title = Column(String(128), unique=True, convert_unicode=True)
+    title = Column(UnicodeText(128), unique=True)
     text = Column(UnicodeText)
     created = Column(Time)
     
-Index('my_index', Entry.name, unique=True, mysql_length=255)
+Index('my_index', Entry.title, unique=True, mysql_length=255)

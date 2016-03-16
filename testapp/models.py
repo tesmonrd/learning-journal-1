@@ -22,7 +22,7 @@ Base = declarative_base()
 
 
 class Entry(Base):
-    __tablename__ = 'models'
+    __tablename__ = 'learning_journal'
     id = Column(Integer, primary_key=True)
     title = Column(UnicodeText(128), unique=True)
     text = Column(UnicodeText)

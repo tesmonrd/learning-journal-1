@@ -16,6 +16,7 @@ downloads/
 eggs/
 .eggs/
 lib/
+lib/python3.5/
 lib64/
 parts/
 sdist/

@@ -2,9 +2,13 @@ CHANGES.txt
 MANIFEST.in
 README.txt
 development.ini
+mike_dev.ini
+nadia_dev.ini
 production.ini
 pyvenv.cfg
 setup.cfg
+setup.py
+tox.ini
 testapp/__init__.py
 testapp/models.py
 testapp/views.py

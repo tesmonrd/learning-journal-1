@@ -28,6 +28,23 @@ def entry_view(request):
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
     return {'single_entry': single_entry}
 
+
+@view_config(route_name='add_entry', renderer='template/add.jinja2')
+def new_entry(request):
+    try:
+        pass
+    except:
+
+
+@view_config(route_name='edit_entry', renderer='template/edit.jinja2')
+def edit_view(request):
+    try:
+        pass
+    except:
+        
+
+
+
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem
 might be caused by one of the following things:

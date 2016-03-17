@@ -9,7 +9,7 @@ from .models import (
     )
 
 
-@view_config(route_name='home', renderer='templates/mytemplate.pt')
+@view_config(route_name='home', renderer='templates/home.jinja2')
 def my_view(request):
     try:
         one = DBSession.query(Entry).filter(Entry.title == 'one').first()
@@ -18,22 +18,22 @@ def my_view(request):
     return {'one': one, 'project': 'testapp'}
 
 
-@view_config(route_name='detail', renderer='templates/mytemplate.pt')
-def my_view(request):
-    try:
-        one = DBSession.query(Entry).filter(Entry.title == 'one').first()
-    except DBAPIError:
-        return Response(conn_err_msg, content_type='text/plain', status_int=500)
-    return {'one': one, 'project': 'testapp'}
+# @view_config(route_name='entry', renderer='templates/detail.jinja2', matchparam='id'='1')
+# def my_view(request):
+#     try:
+#         one = DBSession.query(Entry).filter(Entry.title == 'one').first()
+#     except DBAPIError:
+#         return Response(conn_err_msg, content_type='text/plain', status_int=500)
+#     return {'one': one, 'project': 'testapp'}
 
 
-@view_config(route_name='add_entry', renderer='templates/mytemplate.pt')
-def my_view(request):
-    try:
-        one = DBSession.query(Entry).filter(Entry.title == 'one').first()
-    except DBAPIError:
-        return Response(conn_err_msg, content_type='text/plain', status_int=500)
-    return {'one': one, 'project': 'testapp'}
+# @view_config(route_name='add_entry', renderer='templates/mytemplate.pt')
+# def my_view(request):
+#     try:
+#         one = DBSession.query(Entry).filter(Entry.title == 'one').first()
+#     except DBAPIError:
+#         return Response(conn_err_msg, content_type='text/plain', status_int=500)
+#     return {'one': one, 'project': 'testapp'}
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem

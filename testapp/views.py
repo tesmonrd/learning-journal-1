@@ -9,13 +9,13 @@ from .models import (
     )
 
 
-@view_config(route_name='home', renderer='templates/home.jinja2')
+@view_config(route_name='home', renderer='templates/list.jinja2')
 def my_view(request):
     try:
-        one = DBSession.query(Entry).filter(Entry.title == 'one').first()
+        entry_list = DBSession.query(Entry).all()
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
-    return {'one': one, 'project': 'testapp'}
+    return {'entry_list': entry_list}
 
 
 # @view_config(route_name='entry', renderer='templates/detail.jinja2', matchparam='id'='1')

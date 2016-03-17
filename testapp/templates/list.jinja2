@@ -1,0 +1,10 @@
+{% extends "base.jinja2" %}
+{%block content%}
+    <ul>FUCK
+        {% for entry in entry_list %}
+        <li>
+            <a href='{{ entry.id }}'> {{ entry.title }}: {{ entry.created }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+{%endblock content%}

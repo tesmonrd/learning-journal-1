@@ -9,14 +9,23 @@ from .models import (
     )
 
 
-@view_config(route_name='home', renderer='templates/mytemplate.pt')
-def my_view(request):
+@view_config(route_name='home', renderer='templates/list.jinja2')
+def home_view(request):
     try:
-        one = DBSession.query(Entry).filter(Entry.title == 'one').first()
+        entry_list = DBSession.query(Entry).order_by(Entry.id.desc())
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
-    return {'one': one, 'project': 'testapp'}
+    return {'entry_list': entry_list}
 
+
+@view_config(route_name='entry', renderer='templates/detail.jinja2')
+def entry_view(request):
+    # try:
+    entry_id = '{id}'.format(**request.matchdict)
+    single_entry = DBSession.query(Entry).filter(Entry.id == entry_id).first()
+    # except DBAPIError:
+    #     return Response(conn_err_msg, content_type='text/plain', status_int=500)
+    return {'single_entry': single_entry}
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem
@@ -33,4 +42,3 @@ might be caused by one of the following things:
 After you fix the problem, please restart the Pyramid application to
 try it again.
 """
-

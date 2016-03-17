@@ -6,6 +6,7 @@ from sqlalchemy import (
     Text,
     Time,
     UnicodeText,
+    Unicode
     )
 
 from sqlalchemy.ext.declarative import declarative_base
@@ -22,9 +23,9 @@ Base = declarative_base()
 
 
 class Entry(Base):
-    __tablename__ = 'models'
+    __tablename__ = 'learning_journal'
     id = Column(Integer, primary_key=True)
-    title = Column(UnicodeText(128), unique=True)
+    title = Column(Unicode(128), unique=True)
     text = Column(UnicodeText)
     created = Column(Time)
     

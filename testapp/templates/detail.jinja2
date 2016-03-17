@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html>
-    <!DOCTYPE html>
-<html>
-    <head>
-        <title>Entry</title>
-    </head>
-    <body>
-        <header></header>
-        <h1>Entry</h1>
-        {% block list %}
-        {% endblock list %}
-    </body>
-</html>
+{% extends "base.jinja2" %}
+{%block content%}
+<h1>{{single_entry.title}}</h1>
+<h3>{{single_entry.created}}</h3>
+<p>{{single_entry.text}}</p>
+{%endblock content%}

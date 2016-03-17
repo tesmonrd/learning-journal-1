@@ -2,10 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+.DS_Store
 # C extensions
 *.so
-
+testapp/scripts/__pycache__/__init__.cpython-35.pyc
+testapp/scripts/__pycache__/initializedb.cpython-35.pyc
 # Distribution / packaging
 .Python
 env/

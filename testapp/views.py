@@ -20,11 +20,12 @@ def home_view(request):
 
 @view_config(route_name='entry', renderer='templates/detail.jinja2')
 def entry_view(request):
-    # try:
-    entry_id = '{id}'.format(**request.matchdict)
-    single_entry = DBSession.query(Entry).filter(Entry.id == entry_id).first()
-    # except DBAPIError:
-    #     return Response(conn_err_msg, content_type='text/plain', status_int=500)
+    try:
+        # entry_id = '{id}'.format(**request.matchdict)
+        entry_id = request.matchdict['id']
+        single_entry = DBSession.query(Entry).filter(Entry.id == entry_id).first()
+    except DBAPIError:
+        return Response(conn_err_msg, content_type='text/plain', status_int=500)
     return {'single_entry': single_entry}
 
 conn_err_msg = """\

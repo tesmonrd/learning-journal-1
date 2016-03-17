@@ -3,7 +3,7 @@
     <ul>FUCK
         {% for entry in entry_list %}
         <li>
-            <a href='entry/{{ entry.id }}'> {{ entry.title }}: {{ entry.created }}</a>
+            <a href='{{request.route_url('entry', id=entry.id)}}'> {{ entry.title }}: {{ entry.created }}</a>
         </li>
         {% endfor %}
     </ul>

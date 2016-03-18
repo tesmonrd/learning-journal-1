@@ -4,8 +4,8 @@ from sqlalchemy import create_engine
 from testapp.models import DBSession, Base
 
 
-TEST_DATABASE_URL = 'sqlite:////tmp/test_db.sqlite'
-
+# TEST_DATABASE_URL = 'sqlite:////tmp/test_db.sqlite'
+TEST_DATABASE_URL = 'postgres://mike:secret@localhost:5432/testing'
 
 @pytest.fixture(scope='session')
 def sqlengine(request):

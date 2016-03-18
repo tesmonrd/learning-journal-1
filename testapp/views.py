@@ -7,7 +7,14 @@ from .models import (
     DBSession,
     Entry,
     )
+from wtforms import Form, BooleanField, TextField, validators
+import markdown
 
+
+class EntryForm(Form):
+    new_title = TextField('Title', [validators.Length(min=4, max=128)])
+    new_text = TextField('Content', [validators.Length(min=6)])
+    submit = SubmitField('Submit',)
 
 @view_config(route_name='home', renderer='templates/list.jinja2')
 def home_view(request):
@@ -29,18 +36,18 @@ def entry_view(request):
     return {'single_entry': single_entry}
 
 
-@view_config(route_name='add_entry', renderer='template/add.jinja2')
-def new_entry(request):
-    try:
-        pass
-    except:
+# @view_config(route_name='add_entry', renderer='template/add.jinja2')
+# def new_entry(request):
+#     try:
+#         pass
+#     except:
 
 
-@view_config(route_name='edit_entry', renderer='template/edit.jinja2')
-def edit_view(request):
-    try:
-        pass
-    except:
+# @view_config(route_name='edit_entry', renderer='template/edit.jinja2')
+# def edit_view(request):
+#     try:
+#         pass
+#     except:
         
 
 

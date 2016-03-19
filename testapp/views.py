@@ -1,23 +1,41 @@
 from pyramid.response import Response
 from pyramid.view import view_config
-
+import transaction
 from sqlalchemy.exc import DBAPIError
 
 from .models import (
     DBSession,
     Entry,
     )
-from wtforms import Form, BooleanField, TextField, validators
-import markdown
+from wtforms import Form, TextField, SubmitField, validators
+from httplib import HTTPFound
+# import markdown
 
 
 class EntryForm(Form):
-    new_title = TextField('Title', [validators.Length(min=4, max=128)])
-    new_text = TextField('Content', [validators.Length(min=6)])
+    """Define EntryForm class."""
+    title = TextField('Title', [validators.Length(min=4, max=128)])
+    text = TextField('Content', [validators.Length(min=6)])
     submit = SubmitField('Submit',)
+
+
+@view_config(route_name='new', renderer='templates/add.jinja')
+def new_entry(request):
+    """Create a form page for a new entry."""
+    form = EntryForm(request.POST)
+    if request.method == 'POST' and form.validate():
+        new_entry = Entry(title=form.title.data, text=form.text.data)
+        DBSession.add(new_entry)
+        DBSession.flush()
+        entry_id = new_entry.id
+        transaction.commit()
+        HTTPFound('entry/{}'.format(entry_id))
+    return {'form': form}
+
 
 @view_config(route_name='home', renderer='templates/list.jinja2')
 def home_view(request):
+    """Render home page with database list."""
     try:
         entry_list = DBSession.query(Entry).order_by(Entry.id.desc())
     except DBAPIError:
@@ -27,6 +45,7 @@ def home_view(request):
 
 @view_config(route_name='entry', renderer='templates/detail.jinja2')
 def entry_view(request):
+    """Render a single page detailed view of an entry."""
     try:
         # entry_id = '{id}'.format(**request.matchdict)
         entry_id = request.matchdict['id']
@@ -34,22 +53,6 @@ def entry_view(request):
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
     return {'single_entry': single_entry}
-
-
-# @view_config(route_name='add_entry', renderer='template/add.jinja2')
-# def new_entry(request):
-#     try:
-#         pass
-#     except:
-
-
-# @view_config(route_name='edit_entry', renderer='template/edit.jinja2')
-# def edit_view(request):
-#     try:
-#         pass
-#     except:
-        
-
 
 
 conn_err_msg = """\

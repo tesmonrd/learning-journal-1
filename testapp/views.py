@@ -2,13 +2,12 @@ from pyramid.response import Response
 from pyramid.view import view_config
 import transaction
 from sqlalchemy.exc import DBAPIError
-
 from .models import (
     DBSession,
     Entry,
     )
 from wtforms import Form, TextField, SubmitField, validators
-from httplib import HTTPFound
+from pyramid.httpexceptions import HTTPFound
 # import markdown
 
 

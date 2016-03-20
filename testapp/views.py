@@ -29,7 +29,7 @@ def new_entry(request):
         DBSession.flush()
         entry_id = new_entry.id
         transaction.commit()
-        return HTTPFound(location='entry/{}'.format(entry_id))
+        return HTTPFound(location='/entry/{}'.format(entry_id))
     return {'form': form}
 
 

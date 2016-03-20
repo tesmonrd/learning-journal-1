@@ -15,8 +15,9 @@ class EntryForm(Form):
     """Define EntryForm class."""
 
     title = StringField('Title', [validators.Length(min=4, max=128,
-                                  message='Title must be 4 to 128 characters long')])
-    text = TextAreaField('Content', [validators.Length(min=6)])
+                                  message='Title must be 4 to 128 characters long.')])
+    text = TextAreaField('Content', [validators.Length(min=6,
+                                     message='Content must be at least 6 characters.')])
 
 
 @view_config(route_name='new', renderer='templates/add.jinja2')

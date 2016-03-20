@@ -33,6 +33,22 @@ def new_entry(request):
     return {'form': form}
 
 
+@view_config(route_name='edit', renderer='templates/add.jinja2')
+def edit_entry(request):
+    """Create a form page for an edited entry."""
+    edit_id = request.matchdict['id']
+    edit_entry = DBSession.query(Entry).get(edit_id)
+    form = EntryForm(request.POST, edit_entry)
+    if request.method == "POST" and form.validate():
+        form.populate_obj(edit_entry)
+        DBSession.add(edit_entry)
+        DBSession.flush()
+        entry_id = edit_entry.id
+        transaction.commit()
+        return HTTPFound(location='/entry/{}'.format(entry_id))
+    return {'form': form}
+
+
 @view_config(route_name='home', renderer='templates/list.jinja2')
 def home_view(request):
     """Render home page with database list."""
@@ -47,7 +63,6 @@ def home_view(request):
 def entry_view(request):
     """Render a single page detailed view of an entry."""
     try:
-        # entry_id = '{id}'.format(**request.matchdict)
         entry_id = request.matchdict['id']
         single_entry = DBSession.query(Entry).filter(Entry.id == entry_id).first()
     except DBAPIError:

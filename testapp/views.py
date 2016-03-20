@@ -8,6 +8,7 @@ from .models import (
 )
 from wtforms import Form, StringField, TextAreaField, validators
 from pyramid.httpexceptions import HTTPFound
+from jinja2 import Markup
 import markdown
 
 
@@ -66,9 +67,16 @@ def entry_view(request):
     try:
         entry_id = request.matchdict['id']
         single_entry = DBSession.query(Entry).filter(Entry.id == entry_id).first()
+        single_entry.text = render_markdown(single_entry.text)
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
     return {'single_entry': single_entry}
+
+
+def render_markdown(content):
+    """Render the fancy markdown for code in text box."""
+    fancy_box = Markup(markdown.markdown(content))
+    return fancy_box
 
 
 conn_err_msg = """\

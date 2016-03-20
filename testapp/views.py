@@ -1,16 +1,63 @@
 from pyramid.response import Response
 from pyramid.view import view_config
-
+import transaction
 from sqlalchemy.exc import DBAPIError
-
 from .models import (
     DBSession,
     Entry,
-    )
+)
+from wtforms import Form, StringField, TextAreaField, validators
+from pyramid.httpexceptions import HTTPFound
+from jinja2 import Markup
+import markdown
+
+
+class EntryForm(Form):
+    """Define EntryForm class."""
+
+    title = StringField('Title', [validators.Length(min=4, max=128,
+                                  message='Title must be 4 to 128 characters long.')])
+    text = TextAreaField('Content', [validators.Length(min=6,
+                                     message='Content must be at least 6 characters.')])
+
+
+@view_config(route_name='new', renderer='templates/add.jinja2')
+def new_entry(request):
+    """Create a form page for a new entry."""
+    form = EntryForm(request.POST)
+    if request.method == 'POST' and form.validate():
+        new_entry = Entry(title=form.title.data, text=form.text.data)
+        DBSession.add(new_entry)
+        DBSession.flush()
+        entry_id = new_entry.id
+        transaction.commit()
+        return HTTPFound(location='/entry/{}'.format(entry_id))
+    return {'form': form}
+
+
+@view_config(route_name='edit', renderer='templates/add.jinja2')
+def edit_entry(request):
+    """Create a form page for an edited entry."""
+    edit_id = request.matchdict['id']
+    edit_entry = DBSession.query(Entry).get(edit_id)
+    # edit_entry.text = render_markdown(edit_entry.text) #trying to get edited entyr to not show html
+    form = EntryForm(request.POST, edit_entry)
+    if request.method == "POST" and form.validate():
+        # edit_entry.text = Markup(edit_entry.text)
+        # edit_entry.text = render_markdown(edit_entry.text)
+        # # edit_entry.text = Markup.striptags(edit_entry.text) #trying to get edited entyr to not show html
+        form.populate_obj(edit_entry)
+        DBSession.add(edit_entry)
+        DBSession.flush()
+        entry_id = edit_entry.id
+        transaction.commit()
+        return HTTPFound(location='/entry/{}'.format(entry_id))
+    return {'form': form}
 
 
 @view_config(route_name='home', renderer='templates/list.jinja2')
 def home_view(request):
+    """Render home page with database list."""
     try:
         entry_list = DBSession.query(Entry).order_by(Entry.id.desc())
     except DBAPIError:
@@ -20,13 +67,21 @@ def home_view(request):
 
 @view_config(route_name='entry', renderer='templates/detail.jinja2')
 def entry_view(request):
+    """Render a single page detailed view of an entry."""
     try:
-        # entry_id = '{id}'.format(**request.matchdict)
         entry_id = request.matchdict['id']
         single_entry = DBSession.query(Entry).filter(Entry.id == entry_id).first()
+        single_entry.text = render_markdown(single_entry.text)
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
     return {'single_entry': single_entry}
+
+
+def render_markdown(content):
+    """Render the fancy markdown for code in text box."""
+    fancy_box = Markup(markdown.markdown(content))
+    return fancy_box
+
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem

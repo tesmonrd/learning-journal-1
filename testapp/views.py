@@ -44,7 +44,7 @@ def edit_entry(request):
     form = EntryForm(request.POST, edit_entry)
     if request.method == "POST" and form.validate():
         # edit_entry.text = Markup(edit_entry.text)
-        edit_entry.text = render_markdown(edit_entry.text)
+        # edit_entry.text = render_markdown(edit_entry.text)
         # # edit_entry.text = Markup.striptags(edit_entry.text) #trying to get edited entyr to not show html
         form.populate_obj(edit_entry)
         DBSession.add(edit_entry)

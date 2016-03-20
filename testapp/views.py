@@ -19,7 +19,7 @@ class EntryForm(Form):
     text = TextField('Content', [validators.Length(min=6)])
 
 
-@view_config(route_name='new', renderer='templates/add.jinja')
+@view_config(route_name='new', renderer='templates/add.jinja2')
 def new_entry(request):
     """Create a form page for a new entry."""
     form = EntryForm(request.POST)
@@ -28,7 +28,7 @@ def new_entry(request):
         DBSession.add(new_entry)
         DBSession.flush()
         entry_id = new_entry.id
-        # transaction.commit()
+        transaction.commit()
         HTTPFound(location='entry/{}'.format(entry_id))
     return {'form': form}
 

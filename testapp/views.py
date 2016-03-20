@@ -5,17 +5,18 @@ from sqlalchemy.exc import DBAPIError
 from .models import (
     DBSession,
     Entry,
-    )
-from wtforms import Form, TextField, SubmitField, validators
+)
+from wtforms import Form, StringField, TextField, validators
 from pyramid.httpexceptions import HTTPFound
 # import markdown
 
 
 class EntryForm(Form):
     """Define EntryForm class."""
-    title = TextField('Title', [validators.Length(min=4, max=128)])
+
+    title = StringField('Title', [validators.Length(min=4, max=128,
+                                  message='Title must be 4 to 128 characters long')])
     text = TextField('Content', [validators.Length(min=6)])
-    submit = SubmitField('Submit',)
 
 
 @view_config(route_name='new', renderer='templates/add.jinja')
@@ -27,8 +28,8 @@ def new_entry(request):
         DBSession.add(new_entry)
         DBSession.flush()
         entry_id = new_entry.id
-        transaction.commit()
-        HTTPFound('entry/{}'.format(entry_id))
+        # transaction.commit()
+        HTTPFound(location='entry/{}'.format(entry_id))
     return {'form': form}
 
 

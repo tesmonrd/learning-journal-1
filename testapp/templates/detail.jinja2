@@ -3,5 +3,6 @@
 <h1>{{single_entry.title}}</h1>
 <h3>{{single_entry.created}}</h3>
 <p>{{single_entry.text}}</p>
+<a href="{{request.route_url('edit', id=single_entry.id)}}">EDIT</a>
 <a href="/">HOME</a>
 {%endblock content%}

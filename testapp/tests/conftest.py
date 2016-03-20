@@ -7,6 +7,7 @@ from testapp.models import DBSession, Base
 # TEST_DATABASE_URL = 'sqlite:////tmp/test_db.sqlite'
 TEST_DATABASE_URL = 'postgres://nadiabahrami:@localhost:5432/testing'
 
+
 @pytest.fixture(scope='session')
 def sqlengine(request):
     engine = create_engine(TEST_DATABASE_URL)
@@ -18,6 +19,7 @@ def sqlengine(request):
 
     request.addfinalizer(teardown)
     return engine
+
 
 @pytest.fixture()
 def dbtransaction(request, sqlengine):

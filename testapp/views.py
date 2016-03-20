@@ -6,7 +6,7 @@ from .models import (
     DBSession,
     Entry,
 )
-from wtforms import Form, StringField, TextField, validators
+from wtforms import Form, StringField, TextAreaField, validators
 from pyramid.httpexceptions import HTTPFound
 # import markdown
 
@@ -16,7 +16,7 @@ class EntryForm(Form):
 
     title = StringField('Title', [validators.Length(min=4, max=128,
                                   message='Title must be 4 to 128 characters long')])
-    text = TextField('Content', [validators.Length(min=6)])
+    text = TextAreaField('Content', [validators.Length(min=6)])
 
 
 @view_config(route_name='new', renderer='templates/add.jinja2')

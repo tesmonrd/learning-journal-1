@@ -8,7 +8,7 @@ from .models import (
 )
 from wtforms import Form, StringField, TextAreaField, validators
 from pyramid.httpexceptions import HTTPFound
-# import markdown
+import markdown
 
 
 class EntryForm(Form):

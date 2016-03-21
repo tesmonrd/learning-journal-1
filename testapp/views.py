@@ -6,19 +6,10 @@ from .models import (
     DBSession,
     Entry,
 )
-from wtforms import Form, StringField, TextAreaField, validators
 from pyramid.httpexceptions import HTTPFound
 from jinja2 import Markup
 import markdown
-
-
-class EntryForm(Form):
-    """Define EntryForm class."""
-
-    title = StringField('Title', [validators.Length(min=4, max=128,
-                                  message='Title must be 4 to 128 characters long.')])
-    text = TextAreaField('Content', [validators.Length(min=6,
-                                     message='Content must be at least 6 characters.')])
+from testapp.formclass import EntryForm
 
 
 @view_config(route_name='new', renderer='templates/add.jinja2')
@@ -29,9 +20,8 @@ def new_entry(request):
         new_entry = Entry(title=form.title.data, text=form.text.data)
         DBSession.add(new_entry)
         DBSession.flush()
-        entry_id = new_entry.id
-        transaction.commit()
-        return HTTPFound(location='/entry/{}'.format(entry_id))
+        url = request.route_url('entry', id=new_entry.id)
+        return HTTPFound(location=url)
     return {'form': form}
 
 
@@ -49,15 +39,15 @@ def edit_entry(request):
         form.populate_obj(edit_entry)
         DBSession.add(edit_entry)
         DBSession.flush()
-        entry_id = edit_entry.id
-        transaction.commit()
-        return HTTPFound(location='/entry/{}'.format(entry_id))
+        url = request.route_url('entry', id=edit_entry.id)
+        return HTTPFound(location=url)
     return {'form': form}
 
 
 @view_config(route_name='home', renderer='templates/list.jinja2')
 def home_view(request):
     """Render home page with database list."""
+    print(request)
     try:
         entry_list = DBSession.query(Entry).order_by(Entry.id.desc())
     except DBAPIError:
@@ -72,7 +62,7 @@ def entry_view(request):
         entry_id = request.matchdict['id']
         single_entry = DBSession.query(Entry).filter(Entry.id == entry_id).first()
         single_entry.text = render_markdown(single_entry.text)
-    except DBAPIError:
+    except DBAPIError:  # Can't figure out how to test this. :(
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
     return {'single_entry': single_entry}
 

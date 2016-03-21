@@ -10,4 +10,3 @@ class EntryForm(Form):
                                   message='Title must be 4 to 128 characters long.')])
     text = TextAreaField('Content', [validators.Length(min=6,
                                      message='Content must be at least 6 characters.')])
-

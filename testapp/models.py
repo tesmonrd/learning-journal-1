@@ -1,11 +1,8 @@
+"""Database Entry model defined."""
 import datetime
 from sqlalchemy import (
     Column,
-    String,
-    Index,
     Integer,
-    Text,
-    Time,
     UnicodeText,
     Unicode,
     DateTime
@@ -17,7 +14,6 @@ from sqlalchemy.orm import (
     scoped_session,
     sessionmaker,
 )
-# from testapp.views import render_markdown
 from zope.sqlalchemy import ZopeTransactionExtension
 from jinja2 import Markup
 import markdown
@@ -43,7 +39,3 @@ class Entry(Base):
     def rendered_text(self):
         """Render markdown when needed."""
         return render_markdown(self.text)
-
-
-# Index('my_index', Entry.title, unique=True, mysql_length=255)
-

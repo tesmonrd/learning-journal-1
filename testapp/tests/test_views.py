@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 """Test file for views."""
-from testapp.views import entry_view, render_markdown
+from testapp.views import entry_view 
 from testapp.views import home_view
 from testapp.models import DBSession, Entry
 from pyramid.testing import DummyRequest
@@ -21,7 +21,7 @@ def test_entry_view_text(dbtransaction, new_model):
     test_request = DummyRequest()
     test_request.matchdict = {'id': new_model.id}
     dic = entry_view(test_request)
-    assert dic['single_entry'].text == '<p>jello</p>'
+    assert dic['single_entry'].text == 'jello'
 
 
 def test_home_view(dbtransaction, new_model):
@@ -78,10 +78,3 @@ def test_entry_view(dbtransaction, new_model):
     test_request.matchdict = {'id': new_model.id}
     dic = entry_view(test_request)
     assert dic['single_entry'] == new_model
-
-
-def test_render_markdown():
-    """Assert render markdown works."""
-    content = 'Hello'
-    output = render_markdown(content)
-    assert output == '<p>Hello</p>'

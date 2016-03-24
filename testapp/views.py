@@ -50,3 +50,7 @@ def entry_view(request):
     entry_id = request.matchdict['id']
     single_entry = DBSession.query(Entry).filter(Entry.id == entry_id).first()
     return {'single_entry': single_entry}
+
+@view_config(route_name='secure', renderer='string', permission ='secured')
+def secure_view(request):
+    return 'This view is secured'

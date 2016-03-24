@@ -62,3 +62,9 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+#Other Stuff
+pip-selfcheck.json
+testapp/scripts/__pycache__/__init__.cpython-35.pyc
+testapp/scripts/__pycache__/initializedb.cpython-35.pyc
+pyvenv.cfg

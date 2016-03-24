@@ -8,8 +8,8 @@ from webtest import TestApp
 from pyramid.paster import get_appsettings
 
 
-# TEST_DATABASE_URL = 'sqlite:////tmp/test_db.sqlite'
-TEST_DATABASE_URL = 'postgres://nadiabahrami:@localhost:5432/testing'
+
+TEST_DATABASE_URL = 'postgres://mike:secret@localhost:5432/testing'
 
 
 @pytest.fixture(scope='session')
@@ -17,7 +17,7 @@ def config_path():
     """Fixture to send path of dev.ini file."""
     dir_ = os.path.dirname(__file__)
     demo_dir = os.path.join(dir_, '../..')
-    return os.path.join(demo_dir, 'nadia_dev.ini')
+    return os.path.join(demo_dir, 'mike_dev.ini')
 
 
 @pytest.fixture(scope='session')

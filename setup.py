@@ -17,6 +17,7 @@ requires = [
     'WTForms',
     'waitress',
     'psycopg2',
+    'markdown',
     ]
 
 tests_require = ['pytest', 'pytest-watch', 'tox', 'webtest', 'pytest-cov']

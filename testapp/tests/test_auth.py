@@ -38,3 +38,12 @@ def test_check_pw_success(auth_env):
 
 def test_stored_password_is_encrypted(auth_env):
     assert os.environ.get('AUTH_PASSWORD', None) != 'secret'
+
+def test_get_login_view(app):
+    response = app.get('/login')
+    response.status_code == 200
+
+def test_post_login(app, auth_env):
+    data = {'username': 'admin', 'password': 'secret'}
+    response = app.post('/login', data)
+    assert response.status_code == 200

@@ -54,3 +54,7 @@ def entry_view(request):
 @view_config(route_name='secure', renderer='string', permission ='secured')
 def secure_view(request):
     return 'This view is secured'
+
+@view_config(route_name= 'login', renderer='templates/login.jinja2')
+def login(request):
+    return {}

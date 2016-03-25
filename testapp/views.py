@@ -5,8 +5,10 @@ from .models import (
     DBSession,
     Entry,
 )
-from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPFound, HTTPForbidden
 from testapp.formclass import EntryForm
+from testapp.security import check_pw
+from pyramid.security import remember
 
 
 @view_config(route_name='new', renderer='templates/add.jinja2')
@@ -57,4 +59,10 @@ def secure_view(request):
 
 @view_config(route_name= 'login', renderer='templates/login.jinja2')
 def login(request):
+    if request.method == 'POST': 
+        username = request.params.get('username', '')
+        password = request.params.get('password', '')
+        if check_pw(password):
+            headers = remember(request, username)
+            return HTTPFound(location ='/', headers=headers)
     return {}

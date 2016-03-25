@@ -43,7 +43,27 @@ def test_get_login_view(app):
     response = app.get('/login')
     response.status_code == 200
 
-def test_post_login(app, auth_env):
+def test_post_login_success_redirects_home(app, auth_env):
     data = {'username': 'admin', 'password': 'secret'}
     response = app.post('/login', data)
+    headers = response.headers
+    domain = "http://localhost"
+    actual_path = headers.get('Location','')[len(domain):]
+    assert actual_path == '/'
+
+def test_post_login_fails(app, auth_env):
+    data = {'username': 'admin', 'password': 'not secret'}
+    response = app.post('/login', data)
     assert response.status_code == 200
+
+def test_post_login_success_auth_tkt_present(app,auth_env):
+    data = {'username': 'admin', 'password': 'secret'}
+    response = app.post('/login', data)
+    headers = response.headers
+    cookies_set = headers.getall('Set-Cookie')
+    assert cookies_set 
+    for cookie in cookies_set:
+        if cookie.startswith('auth_tkt'):
+            break
+    else:
+        assert False

@@ -5,6 +5,8 @@ import pytest
 import webtest 
 from testapp import main
 
+AUTH_DATA = {'username': 'admin', 'password': 'secret'}
+
 @pytest.fixture()
 def app():
     settings = {'sqlalchemy.url' : 'postgres://mike:secret@localhost:5432/testing'}
@@ -17,13 +19,18 @@ def auth_env():
     os.environ['AUTH_PASSWORD'] = pwd_context.encrypt('secret')
     os.environ['AUTH_USERNAME'] = 'admin'
 
+@pytest.fixture()
+def authenticated_app(app,auth_env):
+    app.post('/login', AUTH_DATA)
+    return app
+
 def test_no_access_to_view(app):
     response = app.get('/secure', status=403)
     assert response.status_code == 403
 
-# def test_access_to_view(app):
-#     response = app.get('/secure')
-#     assert response.status_code == 200
+def test_access_to_view(authenticated_app):
+    response = authenticated_app.get('/secure')
+    assert response.status_code == 200
 
 def test_password_exsists(auth_env):
     assert os.environ.get('AUTH_PASSWORD', None) is not None
@@ -44,8 +51,7 @@ def test_get_login_view(app):
     response.status_code == 200
 
 def test_post_login_success_redirects_home(app, auth_env):
-    data = {'username': 'admin', 'password': 'secret'}
-    response = app.post('/login', data)
+    response = app.post('/login', AUTH_DATA)
     headers = response.headers
     domain = "http://localhost"
     actual_path = headers.get('Location','')[len(domain):]
@@ -57,8 +63,7 @@ def test_post_login_fails(app, auth_env):
     assert response.status_code == 200
 
 def test_post_login_success_auth_tkt_present(app,auth_env):
-    data = {'username': 'admin', 'password': 'secret'}
-    response = app.post('/login', data)
+    response = app.post('/login', AUTH_DATA)
     headers = response.headers
     cookies_set = headers.getall('Set-Cookie')
     assert cookies_set 

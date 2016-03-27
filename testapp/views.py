@@ -11,7 +11,7 @@ from testapp.security import check_pw
 from pyramid.security import remember
 
 
-@view_config(route_name='new', renderer='templates/add.jinja2')
+@view_config(route_name='new', renderer='templates/add.jinja2', permission='secured')
 def new_entry(request):
     """Create a form page for a new entry."""
     form = EntryForm(request.POST)
@@ -24,7 +24,7 @@ def new_entry(request):
     return {'form': form}
 
 
-@view_config(route_name='edit', renderer='templates/add.jinja2')
+@view_config(route_name='edit', renderer='templates/add.jinja2', permission='secured')
 def edit_entry(request):
     """Create a form page for an edited entry."""
     edit_id = request.matchdict['id']
@@ -59,10 +59,11 @@ def secure_view(request):
 
 @view_config(route_name= 'login', renderer='templates/login.jinja2')
 def login(request):
-    if request.method == 'POST': 
+    if request.method == 'POST':
         username = request.params.get('username', '')
         password = request.params.get('password', '')
         if check_pw(password):
-            headers = remember(request, username)
-            return HTTPFound(location ='/', headers=headers)
+            head = remember(request, username)
+            return HTTPFound(location='/', headers=head)
     return {}
+

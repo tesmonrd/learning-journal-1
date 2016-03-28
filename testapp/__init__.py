@@ -27,6 +27,8 @@ class MyRoot(object):
 
 def main(global_config, **settings):
     """Function returns a Pyramid WSGI application."""
+    if 'DATABASE_URL' in os.environ:
+        settings['sqlalchemy.url'] = os.environ['DATABASE_URL']
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
     Base.metadata.bind = engine

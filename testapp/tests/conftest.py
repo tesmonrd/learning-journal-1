@@ -9,6 +9,7 @@ from pyramid.paster import get_appsettings
 
 
 
+
 TEST_DATABASE_URL = 'postgres://mike:secret@localhost:5432/testing'
 
 

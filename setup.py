@@ -18,6 +18,7 @@ requires = [
     'waitress',
     'psycopg2',
     'markdown',
+    'passlib',
     ]
 
 tests_require = ['pytest', 'pytest-watch', 'tox', 'webtest', 'pytest-cov']

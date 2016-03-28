@@ -5,11 +5,13 @@ from .models import (
     DBSession,
     Entry,
 )
-from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPFound, HTTPForbidden
 from testapp.formclass import EntryForm
+from testapp.security import check_pw
+from pyramid.security import remember
 
 
-@view_config(route_name='new', renderer='templates/add.jinja2')
+@view_config(route_name='new', renderer='templates/add.jinja2', permission='secured')
 def new_entry(request):
     """Create a form page for a new entry."""
     form = EntryForm(request.POST)
@@ -22,7 +24,7 @@ def new_entry(request):
     return {'form': form}
 
 
-@view_config(route_name='edit', renderer='templates/add.jinja2')
+@view_config(route_name='edit', renderer='templates/add.jinja2', permission='secured')
 def edit_entry(request):
     """Create a form page for an edited entry."""
     edit_id = request.matchdict['id']
@@ -50,3 +52,18 @@ def entry_view(request):
     entry_id = request.matchdict['id']
     single_entry = DBSession.query(Entry).filter(Entry.id == entry_id).first()
     return {'single_entry': single_entry}
+
+@view_config(route_name='secure', renderer='string', permission ='secured')
+def secure_view(request):
+    return 'This view is secured'
+
+@view_config(route_name= 'login', renderer='templates/login.jinja2')
+def login(request):
+    if request.method == 'POST':
+        username = request.params.get('username', '')
+        password = request.params.get('password', '')
+        if check_pw(password):
+            head = remember(request, username)
+            return HTTPFound(location='/', headers=head)
+    return {}
+

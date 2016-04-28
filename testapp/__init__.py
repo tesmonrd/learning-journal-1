@@ -32,9 +32,9 @@ def main(global_config, **settings):
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
     Base.metadata.bind = engine
-    # settings['auth.username'] = os.environ.get('AUTH_USERNAME', 'admin')
-    # settings['auth.password'] = os.environ.get(
-    #     'AUTH_PASSWORD', 'secret')
+    settings['auth.username'] = os.environ.get('AUTH_USERNAME', 'admin')
+    settings['auth.password'] = os.environ.get(
+        'AUTH_PASSWORD', 'secret')
         
     authn_policy = AuthTktAuthenticationPolicy('itsassecret')
     authz_polciy = ACLAuthorizationPolicy()
@@ -52,4 +52,5 @@ def main(global_config, **settings):
     config.add_route('new', '/new')
     config.add_route('edit', '/edit/{id:\d+}')
     config.scan()
+    config.set_session_factory(sessfac)
     return config.make_wsgi_app()

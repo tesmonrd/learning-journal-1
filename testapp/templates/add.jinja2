@@ -1,6 +1,7 @@
 {% extends "base.jinja2" %}
 {%block content%}
 <form method="POST" action="">
+    <input type="hidden" name="csrf_token" value="{{ request.session.get_csrf_token() }}">
     <div>{{ form.title.label }}: {{ form.title(size=100) }}</div>
         {% if form.title.errors %}
             <ul class="errors">
